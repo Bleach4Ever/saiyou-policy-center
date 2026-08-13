@@ -1,5 +1,3 @@
-@import "tailwindcss";
-
 :root {
   --ink: #321a22;
   --muted: #7f6d73;
@@ -75,7 +73,7 @@ button { color: inherit; }
 .mode-switch i::after { content: ""; display: block; width: 17px; height: 17px; border-radius: 50%; background: white; transition: .2s; box-shadow: 0 2px 6px rgba(0,0,0,.18); }
 .mode-switch input:checked + i { background: #f46a82; }
 .mode-switch input:checked + i::after { transform: translateX(16px); }
-.profile { border: 0; padding: 0 0 0 15px; border-left: 1px solid rgba(255,255,255,.15); background: transparent; display: flex; align-items: center; gap: 9px; color: white; cursor: pointer; }
+.profile { border: 0; padding: 0 0 0 15px; border-left: 1px solid rgba(255,255,255,.15); background: transparent; display: flex; align-items: center; gap: 9px; color: white; }
 .profile span { width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center; background: linear-gradient(145deg,#fff7f8,#ffc4ce); color: #9d1029; font-size: 13px; font-weight: 800; }
 .profile b { font-size: 13px; }
 
@@ -120,14 +118,18 @@ button { color: inherit; }
 .card-header h3 { margin: 0 0 5px; font-size: 16px; letter-spacing: -.02em; }
 .card-header p { margin: 0; color: #8b95a7; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .count-pill { color: var(--tone); background: var(--tone-bg); border-radius: 99px; padding: 5px 8px; font-size: 10px; font-weight: 700; white-space: nowrap; }
-.more-button { width: 27px; height: 27px; display: grid; place-items: center; border: 0; background: transparent; color: #9aa4b5; cursor: pointer; letter-spacing: 1px; }
+.section-controls { display: flex; align-items: center; gap: 3px; }
+.section-controls button, .document-controls button { height: 26px; min-width: 26px; padding: 0 7px; border: 1px solid #e4e8ef; border-radius: 7px; color: #758196; background: white; font-size: 9px; cursor: pointer; }
+.section-controls button:hover, .document-controls button:hover { color: #a91631; border-color: #e2a8b3; }
+.section-controls button:disabled, .document-controls button:disabled { opacity: .3; cursor: default; }
 .documents { padding: 6px 10px; }
-.document-row { width: 100%; min-height: 61px; padding: 8px 8px; display: flex; align-items: center; gap: 10px; border: 0; border-radius: 11px; background: transparent; text-align: left; cursor: pointer; transition: .16s; }
+.document-row { width: 100%; min-height: 61px; padding: 8px 8px; display: flex; align-items: center; gap: 10px; border: 0; border-radius: 11px; background: transparent; text-align: left; cursor: pointer; transition: .16s; outline: 0; }
 .document-row:hover { background: #f5f7fb; }
-.drag-handle { width: 11px; color: #c4cad5; font-size: 18px; cursor: grab; line-height: 1; }
+.document-row:focus-visible { box-shadow: inset 0 0 0 2px rgba(190,35,62,.22); }
+.document-row.loading { opacity: .55; pointer-events: none; }
 .file-badge, .large-file { width: 37px; height: 40px; flex: 0 0 auto; border-radius: 9px; display: grid; place-items: center; font-size: 8px; font-weight: 900; letter-spacing: -.02em; color: #d54b58; background: #fff0f1; border: 1px solid #ffe1e4; }
-.file-docx { color: #3970d8; background: #edf4ff; border-color: #dce9ff; }
-.file-xlsx { color: #22906b; background: #eaf8f2; border-color: #d9f0e7; }
+.file-word { color: #3970d8; background: #edf4ff; border-color: #dce9ff; }
+.file-excel { color: #22906b; background: #eaf8f2; border-color: #d9f0e7; }
 .document-main { min-width: 0; flex: 1; display: grid; gap: 5px; }
 .document-main b { font-size: 12px; font-weight: 650; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .document-main small { color: #9ba4b3; font-size: 9px; }
@@ -135,6 +137,7 @@ button { color: inherit; }
 .preview-ready { display: inline-flex; align-items: center; gap: 4px; color: #71809a; font-size: 8px; white-space: nowrap; }
 .preview-ready i { width: 5px; height: 5px; border-radius: 50%; background: #45bd8b; box-shadow: 0 0 0 3px rgba(69,189,139,.1); }
 .arrow { width: 22px; height: 22px; display: grid; place-items: center; color: #99a4b7; border-radius: 7px; background: #f1f4f8; font-size: 11px; }
+.document-controls { display: flex; gap: 3px; }
 .card-footer { height: 46px; padding: 0 18px; display: flex; align-items: center; justify-content: flex-end; border-top: 1px solid #edf0f5; color: #9aa3b2; font-size: 9px; }
 .card-footer button { border: 0; background: transparent; color: #66728a; font-size: 10px; cursor: pointer; }
 .card-footer button b { color: var(--tone); margin-left: 4px; }
@@ -149,6 +152,11 @@ button { color: inherit; }
 .no-result h3 { color: var(--ink); margin: 18px 0 6px; }
 .no-result p { font-size: 12px; }
 .no-result button { border: 0; background: transparent; color: #b01b35; cursor: pointer; }
+.page-state { min-height: 390px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: #8c96a7; font-size: 12px; }
+.page-state > i, .office-state > i { width: 25px; height: 25px; border: 2px solid #eadde1; border-top-color: #bd203d; border-radius: 50%; animation: pdfSpin .8s linear infinite; }
+.page-state h3 { margin: 0; color: var(--ink); font-size: 17px; }
+.page-state p { max-width: 520px; margin: 0; text-align: center; line-height: 1.7; }
+.page-state button { height: 36px; padding: 0 15px; border: 1px solid #e2d6da; border-radius: 9px; color: #a91631; background: white; cursor: pointer; }
 .site-footer { height: 70px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #e1e6ee; color: #929cab; font-size: 10px; }
 .site-footer b { color: #66738a; }
 
@@ -186,6 +194,15 @@ button { color: inherit; }
 .pdf-error b { color: white; font-size: 13px; }
 .pdf-error span { max-width: 360px; text-align: center; color: #aeb4bf; font-size: 10px; }
 @keyframes pdfSpin { to { transform: rotate(360deg); } }
+.office-component { height: min(68vh, 650px); min-height: 480px; position: relative; overflow: auto; background: #e8ebf0; }
+.office-stage { min-height: 100%; opacity: 0; transition: opacity .18s; }
+.office-stage.ready { opacity: 1; }
+.office-state { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: #7d8797; background: #e8ebf0; font-size: 11px; }
+.office-state-error b { color: #4f5968; font-size: 13px; }
+.office-state-error span { color: #929baa; }
+.office-component .docx-wrapper { padding: 28px !important; background: #e8ebf0 !important; }
+.office-component .docx-wrapper > section.docx { margin: 0 auto 24px !important; box-shadow: 0 10px 32px rgba(30,43,72,.15) !important; }
+.office-component .x-spreadsheet { min-width: 900px; }
 .paper { width: 350px; height: 495px; padding: 47px 42px; text-align: center; background: white; box-shadow: 0 12px 35px rgba(30,43,72,.14); }
 .paper-logo { width: 39px; height: 39px; margin: 0 auto 12px; display: grid; place-items: center; color: white; background: #ad1732; font-weight: 900; font-size: 12px; border-radius: 4px; }
 .paper p { color: #8d97a8; font-size: 8px; letter-spacing: .18em; }
@@ -227,13 +244,15 @@ button { color: inherit; }
 .form-dialog input, .form-dialog textarea, .form-dialog select { width: 100%; border: 1px solid #dfe5ee; border-radius: 10px; padding: 11px 12px; outline: 0; color: var(--ink); background: white; font-size: 12px; transition: .2s; }
 .form-dialog input:focus, .form-dialog textarea:focus, .form-dialog select:focus { border-color: #cf6679; box-shadow: 0 0 0 3px rgba(190,35,62,.1); }
 .form-dialog > footer { padding: 5px 24px 0; display: flex; justify-content: flex-end; gap: 9px; }
+.form-dialog > footer.form-footer-split { display: grid; grid-template-columns: auto 1fr auto auto; }
+.danger-button { height: 42px; padding: 0 14px; border: 1px solid #efcbd2; border-radius: 11px; color: #b01b35; background: #fff6f7; font-size: 12px; cursor: pointer; }
+.danger-button:disabled, .primary-button:disabled { opacity: .55; cursor: default; transform: none; }
 .dropzone { margin: 0 24px 20px; min-height: 150px; border: 1.5px dashed #cdd6e4; border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px; cursor: pointer; background: #f8f9fc; }
 .dropzone input { position: absolute; width: 1px; height: 1px; opacity: 0; }
 .dropzone > span { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 11px; color: white; background: #be1f3b; font-size: 20px; }
 .dropzone b { color: #3f4e67; font-size: 11px; }
 .dropzone small { color: #98a2b1; font-size: 9px; }
-.toast { position: fixed; z-index: 40; left: 50%; bottom: 34px; transform: translateX(-50%); padding: 10px 17px; display: flex; align-items: center; gap: 9px; color: white; background: #5f1424; border-radius: 11px; font-size: 12px; box-shadow: 0 14px 40px rgba(69,10,23,.28); animation: toastIn .25s ease; }
-.toast span { width: 18px; height: 18px; display: grid; place-items: center; border-radius: 50%; color: #173927; background: #7ce4b3; font-size: 10px; }
+.toast { position: fixed; z-index: 40; left: 50%; bottom: 34px; transform: translateX(-50%); padding: 10px 17px; color: white; background: #5f1424; border-radius: 11px; font-size: 12px; box-shadow: 0 14px 40px rgba(69,10,23,.28); animation: toastIn .25s ease; }
 @keyframes toastIn { from { transform: translate(-50%, 12px); opacity: 0; } }
 
 @media (max-width: 820px) {
@@ -259,11 +278,13 @@ button { color: inherit; }
   .admin-actions button { height: 36px; padding: 0 12px; }
   .file-size { display: none; }
   .preview-ready { display: none; }
+  .document-controls button:not(:last-child), .section-controls button:not(:last-child) { display: none; }
   .document-main b { max-width: 220px; }
   .site-footer { height: 100px; align-items: flex-start; justify-content: center; flex-direction: column; gap: 8px; }
   .preview-dialog > footer { align-items: flex-start; flex-direction: column; }
   .paper-preview, .excel-viewer { height: 410px; padding: 24px 10px; }
   .pdf-component { height: 62vh; min-height: 400px; }
+  .office-component { height: 62vh; min-height: 400px; }
   .pdf-component-toolbar { padding: 0 10px; gap: 8px; }
   .pdf-page-control { margin-right: auto; }
   .pdf-component-stage { padding: 12px; }

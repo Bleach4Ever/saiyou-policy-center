@@ -34,12 +34,6 @@ export default function PdfViewer({ url, title, expectedPages }: PdfViewerProps)
     return () => observer.disconnect();
   }, []);
 
-  useEffect(() => {
-    setPageNumber(1);
-    setScale(1);
-    setError("");
-  }, [url]);
-
   const pageWidth = Math.max(280, Math.min(containerWidth - 48, 1050)) * scale;
 
   return (
