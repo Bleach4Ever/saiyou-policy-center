@@ -194,15 +194,17 @@ button { color: inherit; }
 .pdf-error b { color: white; font-size: 13px; }
 .pdf-error span { max-width: 360px; text-align: center; color: #aeb4bf; font-size: 10px; }
 @keyframes pdfSpin { to { transform: rotate(360deg); } }
-.office-component { height: min(68vh, 650px); min-height: 480px; position: relative; overflow: auto; background: #e8ebf0; }
-.office-stage { min-height: 100%; opacity: 0; transition: opacity .18s; }
+.office-component { height: min(68vh, 650px); min-height: 480px; position: relative; overflow: hidden; background: #e8ebf0; }
+.office-stage { height: 100%; min-height: 0; opacity: 0; transition: opacity .18s; }
 .office-stage.ready { opacity: 1; }
 .office-state { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: #7d8797; background: #e8ebf0; font-size: 11px; }
 .office-state-error b { color: #4f5968; font-size: 13px; }
 .office-state-error span { color: #929baa; }
 .office-component .docx-wrapper { padding: 28px !important; background: #e8ebf0 !important; }
 .office-component .docx-wrapper > section.docx { margin: 0 auto 24px !important; box-shadow: 0 10px 32px rgba(30,43,72,.15) !important; }
-.office-component .x-spreadsheet { min-width: 900px; }
+.office-component .vue-office-excel,
+.office-component .vue-office-excel-main,
+.office-component .x-spreadsheet { width: 100%; height: 100%; min-width: 0; }
 .paper { width: 350px; height: 495px; padding: 47px 42px; text-align: center; background: white; box-shadow: 0 12px 35px rgba(30,43,72,.14); }
 .paper-logo { width: 39px; height: 39px; margin: 0 auto 12px; display: grid; place-items: center; color: white; background: #ad1732; font-weight: 900; font-size: 12px; border-radius: 4px; }
 .paper p { color: #8d97a8; font-size: 8px; letter-spacing: .18em; }

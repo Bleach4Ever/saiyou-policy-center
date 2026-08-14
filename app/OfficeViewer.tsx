@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { renderAsync } from "docx-preview";
 import jsPreviewExcel from "@js-preview/excel";
+import JSZip from "jszip";
 import "@js-preview/excel/lib/index.css";
 
 type OfficeViewerProps = {
@@ -15,6 +16,42 @@ type Previewer = {
   preview: (source: string | ArrayBuffer | Blob) => Promise<unknown>;
   destroy: () => void;
 };
+
+async function hiddenSheetNames(source: ArrayBuffer) {
+  const zip = await JSZip.loadAsync(source);
+  const workbookXml = await zip.file("xl/workbook.xml")?.async("string");
+  if (!workbookXml) return new Set<string>();
+
+  const document = new DOMParser().parseFromString(workbookXml, "application/xml");
+  return new Set(
+    Array.from(document.getElementsByTagNameNS("*", "sheet"))
+      .filter((sheet) => {
+        const state = sheet.getAttribute("state")?.toLowerCase();
+        return state === "hidden" || state === "veryhidden";
+      })
+      .map((sheet) => sheet.getAttribute("name"))
+      .filter((name): name is string => Boolean(name)),
+  );
+}
+
+function normalizeExcelStage(container: HTMLElement, hiddenSheets: Set<string>) {
+  const menuItems = Array.from(container.querySelectorAll<HTMLElement>(".x-spreadsheet-menu > li"));
+  const hiddenItems = menuItems.filter((item) => hiddenSheets.has(item.textContent?.trim() ?? ""));
+  const activeHiddenSheet = hiddenItems.some((item) => item.classList.contains("active"));
+
+  hiddenItems.forEach((item) => item.remove());
+  if (activeHiddenSheet) {
+    menuItems.find((item) => item.isConnected && item.textContent?.trim() && !item.querySelector("li"))?.click();
+  }
+
+  requestAnimationFrame(() => {
+    container.querySelectorAll<HTMLElement>(".x-spreadsheet-scrollbar").forEach((scrollbar) => {
+      scrollbar.scrollLeft = 0;
+      scrollbar.scrollTop = 0;
+      scrollbar.dispatchEvent(new Event("scroll"));
+    });
+  });
+}
 
 export default function OfficeViewer({ url, type, extension }: OfficeViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -46,9 +83,12 @@ export default function OfficeViewer({ url, type, extension }: OfficeViewerProps
             useBase64URL: true,
           });
         } else {
-          const excelOptions = { xls: extension.toLowerCase() === "xls" } as unknown as Parameters<typeof jsPreviewExcel.init>[1];
+          const isLegacyExcel = extension.toLowerCase() === "xls";
+          const hiddenSheets = isLegacyExcel ? new Set<string>() : await hiddenSheetNames(source);
+          const excelOptions = { xls: isLegacyExcel } as unknown as Parameters<typeof jsPreviewExcel.init>[1];
           previewer = jsPreviewExcel.init(container, excelOptions) as Previewer;
           await previewer.preview(source);
+          normalizeExcelStage(container, hiddenSheets);
         }
         if (!cancelled) setState("ready");
       } catch {
