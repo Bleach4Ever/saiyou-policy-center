@@ -26,3 +26,16 @@ test("connects the page to DATA and keeps document rendering in the browser", as
   assert.match(api, /\/api\/policy-center\/bootstrap/);
   assert.match(packageJson, /"node": ">=18\.0\.0"/);
 });
+
+test("locks preview scrolling and hides empty sections outside admin mode", async () => {
+  const [page, styles] = await Promise.all([
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(page, /document\.body\.style\.overflow = "hidden"/);
+  assert.match(page, /adminMode \? sections : sections\.filter\(\(section\) => section\.documents\.length > 0\)/);
+  assert.match(page, /\{displaySections\.map\(\(section\) =>/);
+  assert.match(styles, /overscroll-behavior: none/);
+  assert.match(styles, /overscroll-behavior: contain/);
+});

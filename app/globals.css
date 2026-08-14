@@ -160,9 +160,9 @@ button { color: inherit; }
 .site-footer { height: 70px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #e1e6ee; color: #929cab; font-size: 10px; }
 .site-footer b { color: #66738a; }
 
-.overlay { position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; padding: 24px; background: rgba(12,22,45,.58); backdrop-filter: blur(8px); animation: fadeIn .18s ease; }
+.overlay { position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; padding: 24px; overflow: hidden; overscroll-behavior: none; background: rgba(12,22,45,.58); backdrop-filter: blur(8px); animation: fadeIn .18s ease; }
 @keyframes fadeIn { from { opacity: 0; } }
-.preview-dialog, .form-dialog { width: min(920px, 100%); max-height: calc(100vh - 48px); overflow: auto; background: white; border-radius: 22px; box-shadow: 0 30px 90px rgba(8,18,43,.3); animation: rise .24s ease; }
+.preview-dialog, .form-dialog { width: min(920px, 100%); max-height: calc(100vh - 48px); overflow: auto; overscroll-behavior: contain; background: white; border-radius: 22px; box-shadow: 0 30px 90px rgba(8,18,43,.3); animation: rise .24s ease; }
 @keyframes rise { from { transform: translateY(14px) scale(.99); opacity: .5; } }
 .preview-dialog > header, .form-dialog > header { height: 82px; padding: 0 22px; display: flex; align-items: center; gap: 13px; border-bottom: 1px solid #e8ecf2; }
 .large-file { width: 44px; height: 48px; border-radius: 11px; font-size: 9px; }
@@ -185,7 +185,7 @@ button { color: inherit; }
 .pdf-page-control b { min-width: 28px; padding: 4px 7px; color: #3b4658; background: #f3f5f8; text-align: center; font-size: 9px; }
 .pdf-page-control span { padding: 0 9px; white-space: nowrap; }
 .pdf-zoom-control b { min-width: 46px; text-align: center; color: #4d586a; font-size: 9px; }
-.pdf-component-stage { flex: 1; overflow: auto; padding: 24px; display: grid; place-items: start center; background: #353535; }
+.pdf-component-stage { flex: 1; overflow: auto; overscroll-behavior: contain; padding: 24px; display: grid; place-items: start center; background: #353535; }
 .pdf-component-stage .react-pdf__Document { min-width: min-content; }
 .pdf-component-stage .react-pdf__Page { overflow: hidden; background: white; box-shadow: 0 10px 35px rgba(0,0,0,.28); }
 .pdf-component-stage .react-pdf__Page canvas { display: block; max-width: none; }
@@ -194,7 +194,7 @@ button { color: inherit; }
 .pdf-error b { color: white; font-size: 13px; }
 .pdf-error span { max-width: 360px; text-align: center; color: #aeb4bf; font-size: 10px; }
 @keyframes pdfSpin { to { transform: rotate(360deg); } }
-.office-component { height: min(68vh, 650px); min-height: 480px; position: relative; overflow: hidden; background: #e8ebf0; }
+.office-component { height: min(68vh, 650px); min-height: 480px; position: relative; overflow: hidden; overscroll-behavior: contain; background: #e8ebf0; }
 .office-stage { height: 100%; min-height: 0; opacity: 0; transition: opacity .18s; }
 .office-stage.ready { opacity: 1; }
 .office-state { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: #7d8797; background: #e8ebf0; font-size: 11px; }

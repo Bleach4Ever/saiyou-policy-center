@@ -106,9 +106,32 @@ export default function Home() {
     return () => { active = false; };
   }, [loadPolicies]);
 
+  useEffect(() => {
+    if (!preview) return;
+    const previousOverflow = document.body.style.overflow;
+    const previousPaddingRight = document.body.style.paddingRight;
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    document.body.style.overflow = "hidden";
+    if (scrollbarWidth > 0) document.body.style.paddingRight = `${scrollbarWidth}px`;
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.body.style.paddingRight = previousPaddingRight;
+    };
+  }, [preview]);
+
+  const displaySections = useMemo(() => (
+    adminMode ? sections : sections.filter((section) => section.documents.length > 0)
+  ), [adminMode, sections]);
+
+  useEffect(() => {
+    if (activeSection !== "all" && !displaySections.some((section) => section.id === activeSection)) {
+      setActiveSection("all");
+    }
+  }, [activeSection, displaySections]);
+
   const visibleSections = useMemo(() => (
-    sections.filter((section) => activeSection === "all" || section.id === activeSection)
-  ), [activeSection, sections]);
+    displaySections.filter((section) => activeSection === "all" || section.id === activeSection)
+  ), [activeSection, displaySections]);
 
   function flash(message: string) {
     setToast(message);
@@ -291,7 +314,7 @@ export default function Home() {
           <>
             <div className="filters" role="tablist" aria-label="制度分区筛选">
               <button className={activeSection === "all" ? "active" : ""} onClick={() => setActiveSection("all")}>全部</button>
-              {sections.map((section) => (
+              {displaySections.map((section) => (
                 <button key={section.id} className={activeSection === section.id ? "active" : ""} onClick={() => setActiveSection(section.id)}>
                   {section.name}<span>{section.documentCount}</span>
                 </button>
